@@ -1,0 +1,13 @@
+### Django ###
+*.log
+*.pot
+*.pyc
+.vscode
+.idea
+db.sqlite3
+__pycache__
+backend/media
+backend/static
+key.py
+
+

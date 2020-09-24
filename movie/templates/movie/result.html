@@ -1,0 +1,6 @@
+<h1>{{ result }}</h1>
+
+{% comment %} 만약에 단일건 조회시 에러발생하면 해당 에러메시를 아래에 출력한다.
+{% endcomment %} {% if error_message %}
+<p>응답코드: {{error_message}}</p>
+{% endif %}
