@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 
 class NowMovie(models.Model):
     tm_id = models.CharField(max_length=6)
@@ -9,6 +7,17 @@ class NowMovie(models.Model):
     backdrop_path = models.URLField(null=True, blank=True)
     rating = models.CharField(max_length=5, null=True, blank=True)
     release_date = models.CharField(max_length=10, null=True, blank=True)
+    overview = models.TextField(null=True, blank=True)
+    create_date = models.IntegerField()
+
+    def __str__(self):
+        return self.tm_id + " > " + self.title
+
+
+class IntroMovie(models.Model):
+    tm_id = models.CharField(max_length=6)
+    title = models.CharField(max_length=50)
+    backdrop_path = models.URLField(null=True, blank=True)
     overview = models.TextField(null=True, blank=True)
     create_date = models.IntegerField()
 

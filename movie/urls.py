@@ -4,9 +4,12 @@ from movie import views
 app_name = 'movie'
 
 urlpatterns = [
-    # Example: /blog/
-    path('', views.savedbView.as_view()),
+    # Example: /movie/
+    path('now/', views.NowMovieList.as_view()),
+    path('intro/', views.IntroMovieToday.as_view()),
+    path('<int:pk>', views.DetailMovie.as_view()),
 
-    path('savedb/', views.savedb, name='savedb')
-
+    path('db/', views.savedbView.as_view()),
+    path('savedb/', views.savedb, name='savedb'),
+    # path('now/', views.NowMovieList.as_view()),
 ]

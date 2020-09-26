@@ -34,9 +34,9 @@ urlpatterns = [
                                                cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc',
                                              cache_timeout=0), name='schema-redoc'),
-    path('', include('movie.urls')),
+    # path('', include('movie.urls')),
+    path('api/movie/', include('movie.urls')),
     path('api/blog/', include('blog.urls')),
-    # path('api/movie/', include('movie.urls')),
 ]
 
 
