@@ -2,7 +2,8 @@
 from rest_framework import generics
 from .serializers import NowMovieListSerializer
 from .serializers import IntroMovieTodaySerializer
-from .serializers import DetailMovieSerializer
+from .serializers import MovieDetailSerializer
+from .serializers import MovieCastSerializer
 from django.shortcuts import render
 from movie.models import NowMovie, MovieDetail, SimulaMovie, MovieGallery, MovieCast
 from movie.models import IntroMovie
@@ -21,9 +22,14 @@ BASE_URL = 'https://api.themoviedb.org/3/movie/'
 INTRO_URL = 'https://api.themoviedb.org/3/trending/movie/week'
 
 
-class DetailMovie(generics.RetrieveUpdateDestroyAPIView):
+# class MovieCastView(generics.ListCreateAPIView):
+#     queryset = MovieCast.objects.all()
+#     serializer_class = MovieCastSerializer
+
+
+class MovieDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MovieDetail.objects.all()
-    serializer_class = DetailMovieSerializer
+    serializer_class = MovieDetailSerializer
 
 
 class NowMovieList(generics.ListCreateAPIView):
@@ -38,12 +44,14 @@ class NowMovieList(generics.ListCreateAPIView):
 class IntroMovieToday(generics.ListCreateAPIView):
     today = datetime.today().strftime("%Y%m%d")
     q = IntroMovie.objects.filter(create_date=today)
-    key = randint(0, q.count()-1)  # 1부터 100 사이의 임의의 정수
-    # print("IntroMovieToday" + str(key))
-    todayid = q[key].id
-    queryset = IntroMovie.objects.filter(pk=todayid)
-    # 모델에 담긴 조회결과를 하기 설정한 직렬화 클래스를 통해 JSON포맷으로 변환한다.
-    serializer_class = IntroMovieTodaySerializer
+
+    if q.count() > 0:
+        key = randint(0, q.count()-1)  # 1부터 100 사이의 임의의 정수
+        # print("IntroMovieToday" + str(key))
+        todayid = q[key].id
+        queryset = IntroMovie.objects.filter(pk=todayid)
+        # 모델에 담긴 조회결과를 하기 설정한 직렬화 클래스를 통해 JSON포맷으로 변환한다.
+        serializer_class = IntroMovieTodaySerializer
 
 
 class savedbView(TemplateView):
@@ -78,10 +86,14 @@ def setSimilar(tmdbid, detail):
         if(count > 9):
             break
         count += 1
-
-        SimulaMovie(simula_id=m['id'], title=m['title'],
-                    backdrop_path=(POSTER_PATH + m['backdrop_path']),
-                    tmdb_id=detail).save()
+        print("setSimilar: " + str(m['id']))
+        img_path = ""
+        if(m['backdrop_path']):
+            SimulaMovie(simula_id=m['id'], title=m['title'],
+                        backdrop_path=(POSTER_PATH + m['backdrop_path']),
+                        tmdb_id=detail).save()
+            # 영화 상세정보 저장
+            setMovieDetail(m['id'])
 
 
 def setMovieCast(tmdbid, detail):
@@ -126,10 +138,22 @@ def setMovieDetail(tmdbid):
             genreList = genreList + '|' + genre['name']
         genreList = genreList[1:]
 
-        detail = MovieDetail(tm_id=m['id'], title=m['title'], backdrop_path=(BACKDROP_PATH+m['backdrop_path']),
+        backdropPath = ""
+        if (m['backdrop_path']):
+            backdropPath = BACKDROP_PATH + m['backdrop_path']
+        else:
+            backdropPath = IMG_EMPTY
+
+        posterPath = ""
+        if (m['poster_path']):
+            posterPath = POSTER_PATH + m['poster_path']
+        else:
+            posterPath = IMG_EMPTY
+
+        detail = MovieDetail(tm_id=m['id'], title=m['title'], backdrop_path=backdropPath,
                              overview=m['overview'], tagline=m['tagline'], release_date=m[
             'release_date'], runtime=m['runtime'], rating=m['vote_average'],
-            genre=genreList, poster=(POSTER_PATH+m['poster_path']))
+            genre=genreList, poster=posterPath)
         detail.save()
 
         # 영화갤러리 저장

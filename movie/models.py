@@ -42,7 +42,8 @@ class MovieDetail (models.Model):
 
 
 class MovieGallery (models.Model):
-    tmdb_id = models.ForeignKey(MovieDetail, on_delete=models.CASCADE)
+    tmdb_id = models.ForeignKey(
+        MovieDetail, related_name='gallery', on_delete=models.CASCADE)
     backdrop_path = models.CharField(max_length=200)
 
     def __str__(self):
@@ -50,7 +51,8 @@ class MovieGallery (models.Model):
 
 
 class MovieCast (models.Model):
-    tmdb_id = models.ForeignKey(MovieDetail, on_delete=models.CASCADE)
+    tmdb_id = models.ForeignKey(
+        MovieDetail, related_name='cast', on_delete=models.CASCADE)
     cast_name = models.CharField(max_length=50)
     cast_role = models.CharField(max_length=100)
     cast_image = models.URLField(null=True, blank=True)
@@ -63,7 +65,8 @@ class SimulaMovie (models.Model):
     simula_id = models.CharField(max_length=6)
     title = models.CharField(max_length=50)
     backdrop_path = models.URLField(blank=True)
-    tmdb_id = models.ForeignKey(MovieDetail, on_delete=models.CASCADE)
+    tmdb_id = models.ForeignKey(
+        MovieDetail, related_name='simula', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title

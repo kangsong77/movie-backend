@@ -33,12 +33,14 @@ class SimulaMovieSerializer (serializers.ModelSerializer):
         fields = ['simula_id', 'title', 'backdrop_path']
 
 
-class DetailMovieSerializer(serializers.ModelSerializer):
+class MovieDetailSerializer(serializers.ModelSerializer):
     cast = MovieCastSerializer(many=True, read_only=True)
     gallery = MovieGallerySerializer(many=True, read_only=True)
     simula = SimulaMovieSerializer(many=True, read_only=True)
 
     class Meta:
         model = MovieDetail
+        # fields = ['tm_id', 'title', 'backdrop_path', 'overview', 'tagline', 'release_date',
+        #           'runtime', 'rating', 'genre', 'poster', 'cast', 'gallery', 'simula']
         fields = ['tm_id', 'title', 'backdrop_path', 'overview', 'tagline', 'release_date',
                   'runtime', 'rating', 'genre', 'poster', 'cast', 'gallery', 'simula']
