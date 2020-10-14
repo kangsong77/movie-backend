@@ -13,8 +13,7 @@ class NowMovie(models.Model):
     def __str__(self):
         return self.tm_id + " > " + self.title
 
-
-class IntroMovie(models.Model):
+class MovieIntro(models.Model):
     tm_id = models.CharField(max_length=6)
     title = models.CharField(max_length=50)
     backdrop_path = models.URLField(null=True, blank=True)
@@ -25,7 +24,7 @@ class IntroMovie(models.Model):
         return self.tm_id + " > " + self.title
 
 
-class MovieDetail (models.Model):
+class MovieDetail(models.Model):
     tm_id = models.CharField(max_length=6, primary_key=True)
     title = models.CharField(max_length=50)
     backdrop_path = models.URLField(null=True, blank=True)

@@ -2,9 +2,9 @@
 from rest_framework import generics
 from .serializers import NowMovieListSerializer
 # ksong
-from .serializers import IntroMovieTodaySerializer
+from .serializers import MovieIntroListSerializer
 
-from movie.models import IntroMovie
+from movie.models import MovieIntro
 from .serializers import MovieDetailSerializer
 from .serializers import MovieCastSerializer
 from django.shortcuts import render
@@ -166,26 +166,42 @@ def setIntroMovie():
 
         for m in movielist:
             if (m['overview']):
-                if not IntroMovie.objects.filter(tm_id=m['id'], create_date=today):
-                    IntroMovie(tm_id=m['id'], title=m['title'], backdrop_path=(BACKDROP_PATH+m['backdrop_path']),
+                if not MovieIntro.objects.filter(tm_id=m['id'], create_date=today):
+                    MovieIntro(tm_id=m['id'], title=m['title'], backdrop_path=(BACKDROP_PATH+m['backdrop_path']),
                                overview=m['overview'], create_date=today).save()
 
                 # 영화 상세정보 저장
                 setMovieDetail(m['id'])
 
 
-# ksong
-class IntroMovieToday(generics.ListCreateAPIView):
+class NowMovieList(generics.ListCreateAPIView):
     today = datetime.today().strftime("%Y%m%d")
-    q = IntroMovie.objects.filter(create_date=today)
+    # ORM 을 이용해 데이터를 모델에 담아 조회한다.
+    queryset = NowMovie.objects.filter(create_date=today)
 
-    if q.count() > 0:
-        key = randint(0, q.count()-1)  # 1부터 100 사이의 임의의 정수
-        # print("IntroMovieToday" + str(key))
-        todayid = q[key].id
-        queryset = IntroMovie.objects.filter(pk=todayid)
-        # 모델에 담긴 조회결과를 하기 설정한 직렬화 클래스를 통해 JSON포맷으로 변환한다.
-        serializer_class = IntroMovieTodaySerializer
+    # 모델에 담긴 조회결과를 하기 설정한 직렬화 클래스를 통해 JSON포맷으로 변환한다.
+    serializer_class = NowMovieListSerializer
+
+
+
+# ksong
+class MovieIntroList(generics.ListCreateAPIView):
+    
+    # 모델에 담긴 조회결과를 하기 설정한 직렬화 클래스를 통해 JSON포맷으로 변환한다.
+    serializer_class = MovieIntroListSerializer
+        
+    def get_queryset(self):
+        today = datetime.today().strftime("%Y%m%d")
+        todayMovieList = MovieIntro.objects.filter(create_date=today)
+    
+        if todayMovieList.count() > 0:
+            key = randint(0, todayMovieList.count()-1)  # 1부터 100 사이의 임의의 정수
+            # print("IntroMovieToday" + str(key))
+            todayid = todayMovieList[key].id
+            return MovieIntro.objects.filter(pk=todayid)
+        else:
+            return MovieIntro.objects.filter(pk=1)
+   
 
 
 def savedb(request):
