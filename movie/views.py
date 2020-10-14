@@ -1,12 +1,15 @@
 # DRF(Django Rest Framework) 에서 제공해주는 API 제너릭 뷰 참조
 from rest_framework import generics
 from .serializers import NowMovieListSerializer
+# ksong
 from .serializers import IntroMovieTodaySerializer
+
+from movie.models import IntroMovie
 from .serializers import MovieDetailSerializer
 from .serializers import MovieCastSerializer
 from django.shortcuts import render
 from movie.models import NowMovie, MovieDetail, SimulaMovie, MovieGallery, MovieCast
-from movie.models import IntroMovie
+
 from django.views.generic import TemplateView
 import requests
 from datetime import datetime
@@ -39,19 +42,6 @@ class NowMovieList(generics.ListCreateAPIView):
 
     # 모델에 담긴 조회결과를 하기 설정한 직렬화 클래스를 통해 JSON포맷으로 변환한다.
     serializer_class = NowMovieListSerializer
-
-
-class IntroMovieToday(generics.ListCreateAPIView):
-    today = datetime.today().strftime("%Y%m%d")
-    q = IntroMovie.objects.filter(create_date=today)
-
-    if q.count() > 0:
-        key = randint(0, q.count()-1)  # 1부터 100 사이의 임의의 정수
-        # print("IntroMovieToday" + str(key))
-        todayid = q[key].id
-        queryset = IntroMovie.objects.filter(pk=todayid)
-        # 모델에 담긴 조회결과를 하기 설정한 직렬화 클래스를 통해 JSON포맷으로 변환한다.
-        serializer_class = IntroMovieTodaySerializer
 
 
 class savedbView(TemplateView):
@@ -92,8 +82,8 @@ def setSimilar(tmdbid, detail):
             SimulaMovie(simula_id=m['id'], title=m['title'],
                         backdrop_path=(POSTER_PATH + m['backdrop_path']),
                         tmdb_id=detail).save()
-            # 영화 상세정보 저장
-            setMovieDetail(m['id'])
+            # 영화 상세정보 저장 - 오래 걸려서 막아놓음
+            # setMovieDetail(m['id'])
 
 
 def setMovieCast(tmdbid, detail):
@@ -169,7 +159,7 @@ def setIntroMovie():
     # 주간 트렌딩 영화
     url = BASE_URL+'popular' + API_KEY
     response = requests.get(url)
-
+# ksong
     if(response.status_code == 200):
         data = response.json()
         movielist = data['results']
@@ -182,6 +172,20 @@ def setIntroMovie():
 
                 # 영화 상세정보 저장
                 setMovieDetail(m['id'])
+
+
+# ksong
+class IntroMovieToday(generics.ListCreateAPIView):
+    today = datetime.today().strftime("%Y%m%d")
+    q = IntroMovie.objects.filter(create_date=today)
+
+    if q.count() > 0:
+        key = randint(0, q.count()-1)  # 1부터 100 사이의 임의의 정수
+        # print("IntroMovieToday" + str(key))
+        todayid = q[key].id
+        queryset = IntroMovie.objects.filter(pk=todayid)
+        # 모델에 담긴 조회결과를 하기 설정한 직렬화 클래스를 통해 JSON포맷으로 변환한다.
+        serializer_class = IntroMovieTodaySerializer
 
 
 def savedb(request):

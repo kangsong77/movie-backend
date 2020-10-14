@@ -1,4 +1,4 @@
 -r common.txt
 
 django-debug-toolbar
-drf-yasg 
+drf-yasg==1.17.1 

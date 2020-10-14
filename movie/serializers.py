@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import NowMovie, IntroMovie, MovieDetail, MovieGallery, MovieCast, SimulaMovie
+from .models import NowMovie, MovieDetail, MovieGallery, MovieCast, SimulaMovie
+# ksong
+from .models import IntroMovie
 
 
 class NowMovieListSerializer(serializers.ModelSerializer):
@@ -7,12 +9,6 @@ class NowMovieListSerializer(serializers.ModelSerializer):
         model = NowMovie
         fields = ['tm_id', 'title', 'backdrop_path',
                   'rating', 'release_date', 'overview']
-
-
-class IntroMovieTodaySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = IntroMovie
-        fields = ['tm_id', 'title', 'backdrop_path', 'overview']
 
 
 class MovieGallerySerializer(serializers.ModelSerializer):
@@ -44,3 +40,10 @@ class MovieDetailSerializer(serializers.ModelSerializer):
         #           'runtime', 'rating', 'genre', 'poster', 'cast', 'gallery', 'simula']
         fields = ['tm_id', 'title', 'backdrop_path', 'overview', 'tagline', 'release_date',
                   'runtime', 'rating', 'genre', 'poster', 'cast', 'gallery', 'simula']
+
+
+# ksong
+class IntroMovieTodaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IntroMovie
+        fields = ['tm_id', 'title', 'backdrop_path', 'overview']

@@ -6,6 +6,7 @@ app_name = 'movie'
 urlpatterns = [
     # Example: /movie/
     path('now/', views.NowMovieList.as_view()),
+    # ksong
     path('intro/', views.IntroMovieToday.as_view()),
     path('<int:pk>', views.MovieDetailView.as_view()),
     # path('cast/', views.MovieCastView.as_view()),

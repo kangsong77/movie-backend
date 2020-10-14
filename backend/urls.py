@@ -26,7 +26,8 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     # 사용자 아이디와 암호를 전달받아 토큰을 발급해주는 레스트프레임워크 기능
-    path('api/get_token/', views.obtain_auth_token),
+    # path('api/get_token/', views.obtain_auth_token),
+    path('accounts/', include('accounts.urls')),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
             schema_view.without_ui(cache_timeout=0), name='schema-json'),
@@ -34,7 +35,7 @@ urlpatterns = [
                                                cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc',
                                              cache_timeout=0), name='schema-redoc'),
-    # path('', include('movie.urls')),
+
     path('api/movie/', include('movie.urls')),
     path('api/blog/', include('blog.urls')),
 ]
