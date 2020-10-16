@@ -6,6 +6,8 @@ from rest_framework.permissions import AllowAny
 from .serializers import UserCreateSerializer
 from .models import User
 from .serializers import UserLoginSerializer
+# DRF(Django Rest Framework) 에서 제공해주는 API 제너릭 뷰 참조
+from rest_framework import generics
 
 # @permission_classes([AllowAny]): IsAuthenticated 설정이 되어 있기 때문에 인증이 필요없는 api이기 때문에
 # permission 설정을 따로 부여하였습니다.
@@ -41,3 +43,36 @@ def login(request):
             'token': serializer.data['token']
         }
         return Response(response, status=status.HTTP_200_OK)
+
+# class FavoriteView(generics.ListAPIView):
+#     authentication_classes = (TokenAuthentication,)
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = UserSerializer
+
+#     # def get_queryset(self):
+#     #     queryset = User.objects.all()
+#     #     email = self.request.user.email
+#     #     return User.objects.filter(id=email)
+    
+#     def post(self, request, format=None):
+#         serializer = FavoriteSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAC_REQUEST)
+
+#     def get(self, request, format=None):
+#         queryset = Post.objects.all()
+#         serializer = PostSerializer(queryset, many=True)
+#         return Response(serializer.data)
+
+
+# class UserView(generics.ListAPIView):
+#     authentication_classes = (TokenAuthentication,)
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = UserSerializer
+
+#     def get_queryset(self):
+#         queryset = User.objects.all()
+#         id = self.request.user.id
+#         return User.objects.filter(id=id)

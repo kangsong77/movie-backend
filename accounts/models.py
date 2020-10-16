@@ -76,3 +76,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.email
+
+
+class Favorite(models.Model):
+    tm_id = models.CharField(max_length=6)
+    title = models.CharField(max_length=50)
+    backdrop_path = models.URLField(null=True, blank=True)
+    
+    email = models.ForeignKey(
+        User, related_name='favorite', on_delete=models.CASCADE)
+    def __str__(self):
+        return self.tm_id + " > " + self.title
