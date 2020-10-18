@@ -4,7 +4,7 @@ from movie import views
 app_name = 'movie'
 
 urlpatterns = [
-    
+
     # ksong
     path('intro/', views.MovieIntroList.as_view()),
     path('<int:pk>', views.MovieDetailView.as_view()),

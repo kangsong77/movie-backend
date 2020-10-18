@@ -1,6 +1,33 @@
-<h1>{{ result }}</h1>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-{% comment %} 만약에 단일건 조회시 에러발생하면 해당 에러메시를 아래에 출력한다.
-{% endcomment %} {% if error_message %}
-<p>응답코드: {{error_message}}</p>
-{% endif %}
+    <title>TheMOVIE WebServer</title>
+  </head>
+
+  <body style="padding-top: 20px; padding-left: 90px">
+    <h1>TheMOVIE Webserver</h1>
+    <hr />
+    <h2>{{ result }}</h2>
+
+    {% comment %} 만약에 단일건 조회시 에러발생하면 해당 에러메시를 아래에
+    출력한다. {% endcomment %} {% if error_message %}
+    <p style="color: #0000ff">응답코드: {{error_message}}</p>
+    {% endif %}
+
+    <hr />
+    <div>
+      <h2>Server 조회 목록</h2>
+      <ul>
+        <li><a href="/swagger">SWAGGER</a></li>
+        <li><a href="/admin">ADMIN</a></li>
+        <li><a href="/movie/intro">오늘의 추천 영화 JSON</a></li>
+        <li><a href="/movie/now">현재 상영중 영화 목록 JSON</a></li>
+        <li><a href="/accounts/favorite">나의 좋아요 영화목록 JSON</a></li>
+      </ul>
+    </div>
+  </body>
+</html>

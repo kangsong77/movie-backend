@@ -1,10 +1,12 @@
-from rest_framework import serializers
+
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import get_user_model
 from .models import User
 from .models import Favorite
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
+from rest_framework.serializers import ModelSerializer, ReadOnlyField
+from rest_framework import serializers
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
@@ -55,13 +57,26 @@ class UserLoginSerializer(serializers.Serializer):
             'token': jwt_token
         }
 
-
-class FavoriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Favorite
-        fields = "__all__"
-
-# class UserSerializer(serializers.ModelSerializer):
+# class UserSerializer(ModelSerializer):
 #     class Meta:
 #         model = User
 #         fields = "__all__"
+#         # fields = ["email", "username"]
+
+
+class UserSerializer(serializers.ModelSerializer):
+    snippets = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Favorite.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'snippets']
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    # user_id = ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Favorite
+        fields = ['tm_id', 'title', 'backdrop_path']
+        # fields = ['tm_id', 'title', 'backdrop_path', 'user_id']

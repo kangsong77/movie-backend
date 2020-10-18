@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 
 class UserManager(BaseUserManager):
@@ -82,8 +83,13 @@ class Favorite(models.Model):
     tm_id = models.CharField(max_length=6)
     title = models.CharField(max_length=50)
     backdrop_path = models.URLField(null=True, blank=True)
-    
-    email = models.ForeignKey(
-        User, related_name='favorite', on_delete=models.CASCADE)
+    # 허가된 users만이 snippets를 create할 수 있도록 snippets 지정
+    #  settings.AUTH_USER_MODEL
+    user_id = models.ForeignKey(
+        User, related_name='snippets', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["-id"]
+
     def __str__(self):
-        return self.tm_id + " > " + self.title
+        return self.title
